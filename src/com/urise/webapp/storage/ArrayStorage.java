@@ -36,7 +36,7 @@ public class ArrayStorage {
     public Resume get(String uuid) {
         Resume resume = null;
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i])) {
+            if (uuid.equals(storage[i].getUuid())) {
                 resume = storage[i];
             }
         }
@@ -65,7 +65,17 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(resume.getUuid())) {
+                index = i;
+            }
+        }
+        if (index >= 0) {
+            storage[index] = resume;
+        } else {
+            System.out.println("Резюме с таким uuid не найдено");
+        }
     }
 
     /**
