@@ -17,9 +17,21 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        storage[size] = r;
-        size++;
+        boolean available = false;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].equals(r)) {
+                available = true;
+                System.out.println("Резюме с таким uuid уже существует");
+            }
+        }
+        if (!available && size < 10000) {
+            storage[size] = r;
+            size++;
+        } else {
+            System.out.println("Хранилище переполнено");
+        }
     }
+
 
     public Resume get(String uuid) {
         Resume resume = null;
@@ -27,6 +39,9 @@ public class ArrayStorage {
             if (uuid.equals(storage[i])) {
                 resume = storage[i];
             }
+        }
+        if (resume == null) {
+            System.out.println("Резюме с таким uuid не найдено");
         }
         return resume;
     }
@@ -44,7 +59,13 @@ public class ArrayStorage {
             }
             storage[size - 1] = null;
             size--;
+        } else {
+            System.out.println("Резюме с таким uuid не найдено");
         }
+    }
+
+    public void update(Resume resume) {
+
     }
 
     /**
