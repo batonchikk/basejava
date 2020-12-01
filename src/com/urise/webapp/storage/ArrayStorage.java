@@ -19,7 +19,7 @@ public class ArrayStorage {
     public void save(Resume r) {
         if (getIndex(r.getUuid()) != -1) {
             System.out.println("Resume with uuid " + r.getUuid() + " already exists");
-        } else if (size >= 10000) {
+        } else if (size >= storage.length) {
             System.out.println("Storage is full");
         } else {
             storage[size] = r;
@@ -28,14 +28,12 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        Resume resume = new Resume();
         int index = getIndex(uuid);
-        if (getIndex(uuid) == -1) {
+        if (index == -1) {
             System.out.println("Resume with uuid " + uuid + " was not found");
-        } else {
-            resume = storage[index];
+            return null;
         }
-        return resume;
+        return storage[index];
     }
 
     public void delete(String uuid) {
@@ -59,13 +57,12 @@ public class ArrayStorage {
     }
 
     private int getIndex(String uuid) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                index = i;
+                return i;
             }
         }
-        return index;
+        return -1;
     }
 
     /**
