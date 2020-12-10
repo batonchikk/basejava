@@ -7,40 +7,18 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage{
 
     @Override
-    public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            System.out.println("Resume with uuid " + r.getUuid() + " was not found");
-        } else {
-            storage[index] = r;
-        }
+    protected void deleteFromArray(int index) {
+        index = Math.abs(index + 1);
+        System.arraycopy(storage, index, storage, index-1, size-index);
+        size--;
     }
 
     @Override
-    public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            System.out.println("Resume with uuid " + r.getUuid() + " already exists");
-        } else if (size >= storage.length) {
-            System.out.println("Storage is full");
-        } else {
-            index = Math.abs(index + 1);
-            System.arraycopy(storage, index, storage, index+1, size-index);
-            storage[index] = r;
-            size++;
-        }
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            System.out.println("Resume with uuid " + uuid + " was not found");
-        } else {
-            index = Math.abs(index + 1);
-            System.arraycopy(storage, index, storage, index-1, size-index);
-            size--;
-        }
+    protected void saveInArray(int index, Resume r) {
+        index = Math.abs(index + 1);
+        System.arraycopy(storage, index, storage, index+1, size-index);
+        storage[index] = r;
+        size++;
     }
 
     @Override
