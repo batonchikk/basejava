@@ -11,13 +11,11 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected void deleteFromArray(int index) {
         storage[index] = storage[size - 1];
         storage[size - 1] = null;
-        size--;
     }
 
     @Override
     protected void saveInArray(int index, Resume r) {
         storage[size] = r;
-        size++;
     }
 
     protected int getIndex(String uuid) {

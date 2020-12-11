@@ -10,7 +10,7 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     protected void deleteFromArray(int index) {
         index = Math.abs(index + 1);
         System.arraycopy(storage, index, storage, index-1, size-index);
-        size--;
+        storage[size - 1] = null;
     }
 
     @Override
@@ -18,7 +18,6 @@ public class SortedArrayStorage extends AbstractArrayStorage{
         index = Math.abs(index + 1);
         System.arraycopy(storage, index, storage, index+1, size-index);
         storage[index] = r;
-        size++;
     }
 
     @Override
