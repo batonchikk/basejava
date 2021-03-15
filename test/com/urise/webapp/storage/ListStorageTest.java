@@ -2,28 +2,22 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-public abstract class AbstractArrayStorageTest {
+public class ListStorageTest {
 
-    private Storage storage;
+    private ListStorage storage = new ListStorage();
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final Resume R1 = new Resume(UUID_1);
     private static final Resume R2 = new Resume(UUID_2);
     private static final Resume R3 = new Resume(UUID_3);
-
-    protected AbstractArrayStorageTest(Storage storage) {
-        this.storage = storage;
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -39,26 +33,16 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void size() {
-        assertSize(3);
-    }
-
-    @Test
     public void clear() {
         storage.clear();
         assertSize(0);
     }
 
-    @Test (expected = NotExistStorageException.class)
-    public void delete() {
-        storage.delete("uuid1");
-        assertSize(2);
-        storage.get("uuid1");
-    }
-
-    @Test (expected = NotExistStorageException.class)
-    public void deleteNonExistent() {
-        storage.delete("uuid6");
+    @Test
+    public void update() {
+        Resume r = new Resume("uuid1");
+        storage.update(r);
+        assertSame(r, storage.get("uuid1"));
     }
 
     @Test
@@ -75,22 +59,27 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void update() {
-        Resume r = new Resume("uuid1");
-        storage.update(r);
-        assertSame(r, storage.get("uuid1"));
-    }
-
-    @Test
     public void get() {
         assertEquals(R1, storage.get("uuid1"));
         assertEquals(R2, storage.get("uuid2"));
-        assertEquals(R3, storage.get("uuid3"));
+        assertEquals(R2, storage.get("uuid2"));
     }
 
     @Test (expected = NotExistStorageException.class)
     public void getNotExist() {
         storage.get("uuid5");
+    }
+
+    @Test (expected = NotExistStorageException.class)
+    public void delete() {
+        storage.delete("uuid1");
+        assertSize(2);
+        storage.get("uuid1");
+    }
+
+    @Test (expected = NotExistStorageException.class)
+    public void deleteNonExistent() {
+        storage.delete("uuid6");
     }
 
     @Test
@@ -103,13 +92,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void storageException() {
-        try {
-            for (int i = storage.size(); i < 10000;i++) {
-                storage.save(new Resume(String.valueOf(i)));
-            }
-        } catch (StorageException e) {
-            Assert.fail("Overflow occurred ahead of time");
-        }
+    public void size() {
+        assertSize(3);
     }
 }
