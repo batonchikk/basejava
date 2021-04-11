@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
@@ -15,47 +13,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void update(Resume r) {
-        int index = arrayList.indexOf(r);
-        if (index == -1) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            arrayList.set(index, r);
-        }
-    }
-
-    @Override
-    public void save(Resume r) {
-        int index = arrayList.indexOf(r);
-        if (index != -1) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            arrayList.add(r);
-        }
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            return arrayList.get(index);
-        }
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            arrayList.remove(index);
-        }
-
-    }
-
-    @Override
     public Resume[] getAll() {
         return arrayList.toArray(new Resume[arrayList.size()]);
     }
@@ -66,15 +23,37 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        int index = -1;
-        Resume resume = new Resume(uuid);
+    protected Object getSearchKey(String uuid) {
         for (int i = 0; i < arrayList.size(); i++) {
-            if (arrayList.get(i).equals(resume)) {
-                index = i;
-                break;
+            if (arrayList.get(i).getUuid().equals(uuid)) {
+                return i;
             }
         }
-        return index;
+        return null;
+    }
+
+    @Override
+    protected void doUpdate(Resume r, Object searchKey) {
+        arrayList.set((Integer)searchKey, r);
+    }
+
+    @Override
+    protected void doSave(Resume r, Object searchKey) {
+        arrayList.add(r);
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+        arrayList.remove(((Integer) searchKey).intValue());
+    }
+
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return arrayList.get((Integer)searchKey);
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 }

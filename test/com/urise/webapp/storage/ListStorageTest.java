@@ -73,6 +73,7 @@ public class ListStorageTest {
     @Test (expected = NotExistStorageException.class)
     public void delete() {
         storage.delete("uuid1");
+        System.out.println(storage.size());
         assertSize(2);
         storage.get("uuid1");
     }
