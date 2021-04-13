@@ -2,7 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class MapStorage extends AbstractStorage {
 
@@ -14,59 +14,61 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Object getSearchKey(String uuid) {
-        return uuid;
-    }
 
-    @Override
-    protected void doUpdate(Resume r, Object searchKey) {
+        Set set = hashMap.entrySet();
+        Iterator i = set.iterator();
 
-    }
-
-    @Override
-    protected void doSave(Resume r, Object searchKey) {
-
-    }
-
-    @Override
-    protected void doDelete(Object searchKey) {
-
-    }
-
-    @Override
-    protected Resume doGet(Object searchKey) {
+        while(i.hasNext()) {
+            Map.Entry me = (Map.Entry)i.next();
+            if (me.getKey().equals(uuid)) {
+                return uuid;
+            }
+        }
         return null;
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return false;
+    protected void doUpdate(Resume r, Object searchKey) {
+        hashMap.put((String) searchKey, r);
     }
 
     @Override
-    public void update(Resume r) {
-        if (hashMap.containsKey(r.getUuid())) {
+    protected void doSave(Resume r, Object searchKey) {
+        if (searchKey == null) {
             hashMap.put(r.getUuid(), r);
+        } else {
+            hashMap.put((String) searchKey, r);
         }
     }
 
     @Override
-    public void save(Resume r) {
-        hashMap.put(r.getUuid(), r);
+    protected void doDelete(Object searchKey) {
+        hashMap.remove(searchKey);
     }
 
     @Override
-    public Resume get(String uuid) {
-        return hashMap.get(uuid);
+    protected Resume doGet(Object searchKey) {
+        return hashMap.get(searchKey);
     }
 
     @Override
-    public void delete(String uuid) {
-        hashMap.remove(uuid);
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 
     @Override
     public Resume[] getAll() {
-        return (Resume[]) hashMap.clone();
+        Resume[] resumes = new Resume[hashMap.size()];
+        Set set = hashMap.entrySet();
+        Iterator i = set.iterator();
+        int index = 0;
+
+        while(i.hasNext()) {
+            Map.Entry me = (Map.Entry)i.next();
+            resumes[index] = (Resume)me.getValue();
+            index++;
+        }
+        return resumes;
     }
 
     @Override
