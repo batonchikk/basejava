@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MapStorage extends AbstractStorage {
 
-    protected HashMap<String, Resume> hashMap = new HashMap<>();
+    protected LinkedHashMap<String, Resume> hashMap = new LinkedHashMap<>();
     @Override
     public void clear() {
         hashMap.clear();
