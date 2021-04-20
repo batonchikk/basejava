@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MapStorage extends AbstractStorage {
 
-    protected LinkedHashMap<String, Resume> hashMap = new LinkedHashMap<>();
+    private Map<String, Resume> hashMap = new LinkedHashMap<>();
     @Override
     public void clear() {
         hashMap.clear();
@@ -14,17 +14,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Object getSearchKey(String uuid) {
-
-        Set set = hashMap.entrySet();
-        Iterator i = set.iterator();
-
-        while(i.hasNext()) {
-            Map.Entry me = (Map.Entry)i.next();
-            if (me.getKey().equals(uuid)) {
-                return uuid;
-            }
-        }
-        return null;
+        return uuid;
     }
 
     @Override
@@ -53,7 +43,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return searchKey != null;
+        return hashMap.containsKey(searchKey);
     }
 
     @Override
