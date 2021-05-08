@@ -4,17 +4,12 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorageFullName extends AbstractStorage {
 
     private Map<String, Resume> hashMap = new LinkedHashMap<>();
     @Override
-    public void clear() {
-        hashMap.clear();
-    }
-
-    @Override
-    protected Object getSearchKey(String uuid) {
-        return uuid;
+    protected Object getSearchKey(String fullNmae) {
+        return fullNmae;
     }
 
     @Override
@@ -47,6 +42,11 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
+    public void clear() {
+        hashMap.clear();
+    }
+
+    @Override
     public List<Resume> getAllSorted() {
         List<Resume> list = new ArrayList<>();
         Set set = hashMap.entrySet();
@@ -63,5 +63,4 @@ public class MapStorage extends AbstractStorage {
     public int size() {
         return hashMap.size();
     }
-
 }

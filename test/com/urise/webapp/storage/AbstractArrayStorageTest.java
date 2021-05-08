@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -17,9 +19,12 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    private static final Resume R1 = new Resume(UUID_1);
-    private static final Resume R2 = new Resume(UUID_2);
-    private static final Resume R3 = new Resume(UUID_3);
+    private static final String FULLNAME_1 = "John Wick";
+    private static final String FULLNAME_2 = "Vin Diesel";
+    private static final String FULLNAME_3 = "Lana Rhodes";
+    private static final Resume R1 = new Resume(UUID_1, FULLNAME_1);
+    private static final Resume R2 = new Resume(UUID_2, FULLNAME_2);
+    private static final Resume R3 = new Resume(UUID_3, FULLNAME_3);
 
     protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -76,7 +81,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void update() {
-        Resume r = new Resume("uuid1");
+        Resume r = new Resume("uuid1", "John Wick");
         storage.update(r);
         assertSame(r, storage.get("uuid1"));
     }
@@ -94,19 +99,20 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] storageGetAll = storage.getAll();
-        assertEquals(storageGetAll.length, 3);
-        assertEquals(storageGetAll[0], R1);
-        assertEquals(storageGetAll[1], R2);
-        assertEquals(storageGetAll[2], R3);
+    public void getAllSorted() {
+        List<Resume> storageGetAll = storage.getAllSorted();
+        System.out.println(storageGetAll.size());
+        assertEquals(storageGetAll.size(), 3);
+        assertEquals(storageGetAll.get(0), R1);
+        assertEquals(storageGetAll.get(1), R2);
+        assertEquals(storageGetAll.get(2), R3);
     }
 
     @Test
     public void storageException() {
         try {
             for (int i = storage.size(); i < 10000;i++) {
-                storage.save(new Resume(String.valueOf(i)));
+                storage.save(new Resume(String.valueOf(i), "fullname"));
             }
         } catch (StorageException e) {
             Assert.fail("Overflow occurred ahead of time");
