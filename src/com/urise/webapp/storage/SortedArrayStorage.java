@@ -14,7 +14,7 @@ public class SortedArrayStorage extends AbstractArrayStorage{
 
     @Override
     protected void saveInArray(int index, Resume r) {
-        index = Math.abs(index + 1);
+        index = - index - 1;
         System.arraycopy(storage, index, storage, index+1, size-index);
         storage[index] = r;
     }
@@ -23,6 +23,8 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     protected Object getSearchKey(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
+        //searchKey.setFullName("name");
+        //not fullName
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
 }
