@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract Object getSearchKey(Resume r);
 
     protected abstract void doUpdate(Resume r, Object searchKey);
 
@@ -19,37 +19,41 @@ public abstract class AbstractStorage implements Storage {
     protected abstract boolean isExist(Object searchKey);
 
     public void update(Resume r) {
-        Object searchKey = getExistedSearchKey(r.getUuid());
+        Object searchKey = getExistedSearchKey(r);
         doUpdate(r, searchKey);
     }
 
     public void save(Resume r) {
-        Object searchKey = getNotExistedSearchKey(r.getUuid());
+        Object searchKey = getNotExistedSearchKey(r);
         doSave(r, searchKey);
     }
 
     public void delete(String uuid) {
-        Object searchKey = getExistedSearchKey(uuid);
+        Resume r = new Resume();
+        r.setUuid(uuid);
+        Object searchKey = getExistedSearchKey(r);
         doDelete(searchKey);
     }
 
     public Resume get(String uuid) {
-        Object searchKey = getExistedSearchKey(uuid);
+        Resume r = new Resume();
+        r.setUuid(uuid);
+        Object searchKey = getExistedSearchKey(r);
         return doGet(searchKey);
     }
 
-    private Object getExistedSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private Object getExistedSearchKey(Resume r) {
+        Object searchKey = getSearchKey(r);
         if (!isExist(searchKey)) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(r.getUuid());
         }
         return searchKey;
     }
 
-    private Object getNotExistedSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private Object getNotExistedSearchKey(Resume r) {
+        Object searchKey = getSearchKey(r);
         if (isExist(searchKey)) {
-            throw new ExistStorageException(uuid);
+            throw new ExistStorageException(r.getUuid());
         }
         return searchKey;
     }

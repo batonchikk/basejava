@@ -20,11 +20,12 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
-        Resume searchKey = new Resume();
-        searchKey.setUuid(uuid);
+    protected Object getSearchKey(Resume r) {
+        System.out.println(r.getUuid());
+        System.out.println(r.getFullName());
+        //searchKey.setUuid(uuid);
         //searchKey.setFullName("name");
         //not fullName
-        return Arrays.binarySearch(storage, 0, size, searchKey);
+        return Arrays.binarySearch(storage, 0, size, r);
     }
 }
