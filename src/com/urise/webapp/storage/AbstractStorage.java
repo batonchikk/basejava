@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract Object getSearchKey(Resume r);
+    protected abstract Object getSearchKey(String uuid);
 
     protected abstract void doUpdate(Resume r, Object searchKey);
 
@@ -19,41 +19,41 @@ public abstract class AbstractStorage implements Storage {
     protected abstract boolean isExist(Object searchKey);
 
     public void update(Resume r) {
-        Object searchKey = getExistedSearchKey(r);
+        Object searchKey = getExistedSearchKey(r.getUuid());
         doUpdate(r, searchKey);
     }
 
     public void save(Resume r) {
-        Object searchKey = getNotExistedSearchKey(r);
+        Object searchKey = getNotExistedSearchKey(r.getUuid());
         doSave(r, searchKey);
     }
 
     public void delete(String uuid) {
         Resume r = new Resume();
         r.setUuid(uuid);
-        Object searchKey = getExistedSearchKey(r);
+        Object searchKey = getExistedSearchKey(uuid);
         doDelete(searchKey);
     }
 
     public Resume get(String uuid) {
         Resume r = new Resume();
         r.setUuid(uuid);
-        Object searchKey = getExistedSearchKey(r);
+        Object searchKey = getExistedSearchKey(uuid);
         return doGet(searchKey);
     }
 
-    private Object getExistedSearchKey(Resume r) {
-        Object searchKey = getSearchKey(r);
+    private Object getExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
-            throw new NotExistStorageException(r.getUuid());
+            throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private Object getNotExistedSearchKey(Resume r) {
-        Object searchKey = getSearchKey(r);
+    private Object getNotExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
-            throw new ExistStorageException(r.getUuid());
+            throw new ExistStorageException(uuid);
         }
         return searchKey;
     }

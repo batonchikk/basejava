@@ -5,9 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
@@ -57,16 +55,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<>();
-        for (Resume resume : storage) {
-            if (resume != null) {
-                list.add(resume);
-            }
-        }
-        return list;
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
 }
 
-    protected abstract Object getSearchKey(Resume r);
+    protected abstract Object getSearchKey(String uuid);
     protected abstract void deleteFromArray(int index);
     protected abstract void saveInArray(int index, Resume r);
 

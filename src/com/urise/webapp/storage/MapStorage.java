@@ -13,8 +13,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getSearchKey(Resume r) {
-        return r.getUuid();
+    protected Object getSearchKey(String uuid) {
+        return uuid;
     }
 
     @Override
@@ -48,15 +48,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<>();
-        Set set = hashMap.entrySet();
-        Iterator i = set.iterator();
-
-        while(i.hasNext()) {
-            Map.Entry me = (Map.Entry)i.next();
-            list.add((Resume)me.getValue());
-        }
-        return list;
+        return new ArrayList<>(hashMap.values());
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.urise.webapp.model;
 
+import java.util.Objects;
+import java.util.UUID;
+
 /**
  * ru.javawebinar.basejava.model.Resume class
  */
@@ -10,7 +13,14 @@ public class Resume implements Comparable<Resume>{
     private String fullName;
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
+        this.fullName = fullName;
+    }
+
+    public Resume(String fullName) {
+        this.uuid = UUID.randomUUID().toString();
         this.fullName = fullName;
     }
 
@@ -32,12 +42,15 @@ public class Resume implements Comparable<Resume>{
 
         Resume resume = (Resume) o;
 
-        return uuid.equals(resume.uuid) && (fullName.equals(resume.fullName));
+        if (!uuid.equals(resume.uuid)) return false;
+        return fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        int result = uuid.hashCode();
+        result += fullName.hashCode();
+        return result;
     }
 
     @Override
@@ -48,10 +61,7 @@ public class Resume implements Comparable<Resume>{
     @Override
     public int compareTo(Resume o) {
         int result = fullName.compareTo(o.fullName);
-        if (result == 0) {
-            result = this.uuid.compareTo(o.uuid);
-        }
-        return result;
+        return result != 0 ? result : uuid.compareTo(o.uuid);
     }
 
     public String getFullName() {

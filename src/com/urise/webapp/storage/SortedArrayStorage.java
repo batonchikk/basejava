@@ -3,8 +3,12 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage{
+
+    private static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
+
 
     @Override
     protected void deleteFromArray(int index) {
@@ -20,12 +24,8 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     }
 
     @Override
-    protected Object getSearchKey(Resume r) {
-        System.out.println(r.getUuid());
-        System.out.println(r.getFullName());
-        //searchKey.setUuid(uuid);
-        //searchKey.setFullName("name");
-        //not fullName
-        return Arrays.binarySearch(storage, 0, size, r);
+    protected Object getSearchKey(String uuid) {
+        Resume searchKey = new Resume(uuid, "fullName");
+        return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 }
